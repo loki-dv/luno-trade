@@ -12,6 +12,7 @@ require 'json'
 puts '=' * 80
 puts '=' * 34 + ' Luno Trade ' + '=' * 34
 puts '=' * 80
+
 # Load config
 BitX.configure do |config|
   config.api_key_secret = ENV['API_KEY_SECRET']
@@ -41,11 +42,26 @@ end
 
 # Parse command line args
 puts '=' * 80
-if ARGV.length == 0
+if ARGV.empty?
   # nothing to parse
-  puts 'No command, exit'
+  puts 'No command detected, exit'
   exit 0
-elsif
-  ARGV.length >= 1
+else
+  command = ARGV[0]
   puts 'Will be processed command ' + ARGV[0]
+  ARGV.shift
 end
+
+until ARGV.empty?
+  next unless ARGV.first.start_with?('-')
+  case ARGV.shift
+  when '-c', '--corner', '--corner-price', '--corner_price', \
+       '-corner', '-corner-price', '-corner_price'
+    corner_price = ARGV.shift
+  when '-v', '--volume', '-volume'
+    volume = ARGV.shift
+  end
+end
+
+puts 'Corner price from command line: ' + corner_price unless corner_price.nil?
+puts 'Volume from command line: ' + volume unless volume.nil?
