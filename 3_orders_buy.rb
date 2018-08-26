@@ -25,11 +25,18 @@ end
 
 # Balance information section
 balance = BitX.balance
+# If ETH wallet is enable, we have three balances:
+# ETH
+# EUR
+# BTC
+# without ETH:
+# EUR
+# BTC
 puts 'Current balance:'
-puts 'EUR: ' + balance[0][:balance].to_f.round(2).to_s + ' (reserved: ' + \
+puts 'EUR: ' + balance[1][:balance].to_f.round(2).to_s + ' (reserved: ' + \
      balance[0][:reserved].to_f.round(2).to_s + ', available: ' + \
      balance[0][:available].to_f.round(2).to_s + ')'
-puts 'BTC: ' + balance[1][:balance].to_f.to_s + ' (reserved: ' + \
+puts 'BTC: ' + balance[2][:balance].to_f.to_s + ' (reserved: ' + \
      balance[1][:reserved].to_f.to_s + ', available: ' + \
      balance[1][:available].to_f.to_s + ')'
 
