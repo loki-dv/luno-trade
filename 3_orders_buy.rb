@@ -143,7 +143,7 @@ case command
   when 'renew'
     fold(buy_orders)
     sleep(3)
-    avg_sell_price = ((sell_orders_prices.sum.to_f / sell_orders_prices.size.to_f - 200) * 1.01).to_f.round(2)
+    avg_sell_price = ((sell_orders_prices.sum.to_f / sell_orders_prices.size.to_f - ENV['SELL_ORDER_DISTANCE'].to_f) * 1.01).to_f.round(2)
     corner_price = BitX.ticker(ENV['TICKER'])[:bid].to_f.round(2) if corner_price.nil?
     corner_price = avg_sell_price if corner_price > avg_sell_price
     puts 'Corner price: ' + corner_price.to_s
