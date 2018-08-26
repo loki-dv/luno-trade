@@ -147,7 +147,7 @@ case command
     corner_price = BitX.ticker(ENV['TICKER'])[:bid].to_f.round(2) if corner_price.nil?
     corner_price = avg_sell_price if corner_price > avg_sell_price
     puts 'Corner price: ' + corner_price.to_s
-    volume = (balance[1][:balance].to_f.round(2) / (corner_price * 10)).round(4) if volume.nil?
+    volume = (balance[1][:balance].to_f.round(2) / (corner_price * ENV['MM_ORDER_PERC'].to_f)).round(4) if volume.nil?
     puts 'Corner volume: ' + volume.to_s
     orders_send(volume, corner_price)
 end
