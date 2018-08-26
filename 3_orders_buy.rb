@@ -35,17 +35,18 @@ puts 'BTC: ' + balance[1][:balance].to_f.to_s + ' (reserved: ' + \
 
 # Orders information section
 buy_orders = Array.new
+sell_orders_prices = Array.new
 puts '=' * 80
 puts 'My current orders:'
-p_orders = BitX.list_orders(ENV['TICKER'])
+p_orders = BitX.list_orders(ENV['TICKER'], state: 'PENDING')
 p_orders.each do |order|
-  if order[:state] == 'PENDING'
-    if order[:type] == :BID
-      buy_orders.push(order[:order_id])
-    end
-    puts order[:order_id] + ': ' + order[:type].to_s + ' ' + \
-         order[:limit_price].to_f.to_s + ' ' + order[:limit_volume].to_f.to_s
+  if order[:type] == :BID
+    buy_orders.push(order[:order_id])
+  else
+    sell_orders_prices.push(order[:limit_price])
   end
+  puts order[:order_id] + ': ' + order[:type].to_s + ' ' + \
+       order[:limit_price].to_f.to_s + ' ' + order[:limit_volume].to_f.to_s
 end
 
 # Parse command line args
@@ -135,9 +136,11 @@ case command
   when 'renew'
     fold(buy_orders)
     sleep(3)
+    avg_sell_price = ((sell_orders_prices.sum.to_f / sell_orders_prices.size.to_f - 200) * 1.01).to_f.round(2)
     corner_price = BitX.ticker(ENV['TICKER'])[:bid].to_f.round(2) if corner_price.nil?
+    corner_price = avg_sell_price if corner_price > avg_sell_price
     puts 'Corner price: ' + corner_price.to_s
-    volume = (balance[0][:balance].to_f.round(2) / (corner_price * 10)).round(4) if volume.nil?
+    volume = (balance[1][:balance].to_f.round(2) / (corner_price * 10)).round(4) if volume.nil?
     puts 'Corner volume: ' + volume.to_s
     orders_send(volume, corner_price)
 end
