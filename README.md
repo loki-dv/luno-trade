@@ -65,3 +65,42 @@ Parameters:
 Without parameters we will use:
 * Last BID order price in order book instead corner_price argument
 * 1/10 from deposit in EUR as volume in EUR and deposit/(corner_price*10) and apply round(4)
+
+
+## ENV variables:
+
+Sample of config file:
+
+```API_KEY_ID=abcdefg12345
+API_KEY_SECRET=abcdefghijklmnopqrstuvwxyz0123456789
+TICKER=XBTEUR
+1ST_BUY_ORDER_PRICE=0.95
+2ND_BUY_ORDER_PRICE=0.93
+3RD_BUY_ORDER_PRICE=0.91
+#1ST_BUY_ORDER_VOLUME=0.0005
+#2ND_BUY_ORDER_VOLUME=0.001
+#3RD_BUY_ORDER_VOLUME=0.0015
+1ST_BUY_ORDER_VOLUME_PERC=10
+2ND_BUY_ORDER_VOLUME_PERC=20
+3RD_BUY_ORDER_VOLUME_PERC=30
+SELL_ORDER_DISTANCE=350
+MM_BUY_ORDER_PERC=10
+```
+
+* API_KEY_ID - API key from Luno
+* API_KEY_SECRET - API key secret
+* TICKER - ticker
+* 1ST_BUY_ORDER_PRICE - it is a multiplier to the corner_price for the first order (default 0.99)
+* 2ND_BUY_ORDER_PRICE - it is a multiplier to the corner_price for the second order (default 0.97)
+* 3RD_BUY_ORDER_PRICE - it is a multiplier to the corner_price for the third order (default 0.95)
+* One of:
+  * 1ST_BUY_ORDER_VOLUME - it is a volume of the first order OR
+  * 1ST_BUY_ORDER_VOLUME_PERC - it is a volume of the first order in percentage
+* One of:
+  * 2ND_BUY_ORDER_VOLUME - it is a volume of the second order OR
+  * 2ND_BUY_ORDER_VOLUME_PERC - it is a volume of the second order in percentage
+* One of:
+  * 3RD_BUY_ORDER_VOLUME - it is a volume of the third order OR
+  * 3RD_BUY_ORDER_VOLUME_PERC - it is a volume of the third order in percentage
+* SELL_ORDER_DISTANCE - distance of average sell price
+* MM_BUY_ORDER_PERC - money-management volume of first buy order in percentage
