@@ -32,14 +32,15 @@ balance = BitX.balance
 # without ETH:
 # EUR
 # BTC
+eur_idx = 1
+btc_idx = 2
 puts 'Current balance:'
-puts 'EUR: ' + balance[1][:balance].to_f.round(2).to_s + ' (reserved: ' + \
-     balance[0][:reserved].to_f.round(2).to_s + ', available: ' + \
-     balance[0][:available].to_f.round(2).to_s + ')'
-puts 'BTC: ' + balance[2][:balance].to_f.to_s + ' (reserved: ' + \
-     balance[1][:reserved].to_f.to_s + ', available: ' + \
-     balance[1][:available].to_f.to_s + ')'
-
+puts 'EUR: ' + balance[eur_idx][:balance].to_f.round(2).to_s + ' (reserved: ' + \
+     balance[eur_idx][:reserved].to_f.round(2).to_s + ', available: ' + \
+     balance[eur_idx][:available].to_f.round(2).to_s + ')'
+puts 'BTC: ' + balance[btc_idx][:balance].to_f.to_s + ' (reserved: ' + \
+     balance[btc_idx][:reserved].to_f.to_s + ', available: ' + \
+     balance[btc_idx][:available].to_f.to_s + ')'
 # Orders information section
 buy_orders = Array.new
 sell_orders_prices = Array.new
@@ -107,7 +108,7 @@ def orders_send(volume, corner_price)
   if ENV['1ST_ORDER_VOLUME_PERC'].nil?
     local_volume = check_var(ENV['1ST_ORDER_VOLUME'], volume).round(4)
   else
-    local_volume = ((volume / 10) * ENV['1ST_ORDER_VOLUME_PERC'].to_f).round(4)
+    local_volume = ((volume / ENV['MM_ORDER_PERC'].to_f) * ENV['1ST_ORDER_VOLUME_PERC'].to_f).round(4)
   end
   puts "Will be send BID order with price #{local_price} (#{price_multiplier}) and volume #{local_volume}"
   result = BitX.post_order('BID', local_volume, local_price, ENV['TICKER'])
@@ -118,7 +119,7 @@ def orders_send(volume, corner_price)
   if ENV['2ND_ORDER_VOLUME_PERC'].nil?
     local_volume = check_var(ENV['2ND_ORDER_VOLUME'], volume*1.5).round(4)
   else
-    local_volume = ((volume / 10) * ENV['2ND_ORDER_VOLUME_PERC'].to_f).round(4)
+    local_volume = ((volume / ENV['MM_ORDER_PERC'].to_f) * ENV['2ND_ORDER_VOLUME_PERC'].to_f).round(4)
   end
   puts "Will be send BID order with price #{local_price} (#{price_multiplier}) and volume #{local_volume}"
   result = BitX.post_order('BID', local_volume, local_price, ENV['TICKER'])
@@ -129,7 +130,7 @@ def orders_send(volume, corner_price)
   if ENV['3RD_ORDER_VOLUME_PERC'].nil?
     local_volume = check_var(ENV['3RD_ORDER_VOLUME'], volume*2).round(4)
   else
-    local_volume = ((volume / 10) * ENV['3RD_ORDER_VOLUME_PERC'].to_f).round(4)
+    local_volume = ((volume / ENV['MM_ORDER_PERC'].to_f) * ENV['3RD_ORDER_VOLUME_PERC'].to_f).round(4)
   end
   puts "Will be send BID order with price #{local_price} (#{price_multiplier}) and volume #{local_volume}"
   result = BitX.post_order('BID', local_volume, local_price, ENV['TICKER'])
@@ -147,7 +148,7 @@ case command
     corner_price = BitX.ticker(ENV['TICKER'])[:bid].to_f.round(2) if corner_price.nil?
     corner_price = avg_sell_price if corner_price > avg_sell_price
     puts 'Corner price: ' + corner_price.to_s
-    volume = (balance[1][:balance].to_f.round(2) / (corner_price * ENV['MM_ORDER_PERC'].to_f)).round(4) if volume.nil?
+    volume = ((balance[eur_idx][:balance].to_f.round(2) * (ENV['MM_ORDER_PERC'].to_f * 0.01)) / corner_price).round(4) if volume.nil?
     puts 'Corner volume: ' + volume.to_s
     orders_send(volume, corner_price)
 end
