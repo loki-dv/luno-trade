@@ -35,15 +35,15 @@ balance = BitX.balance
 eur_idx = 1
 btc_idx = 2
 puts 'Current balance:'
-puts 'EUR: ' + balance[eur_idx][:balance].to_f.round(2).to_s + ' (reserved: ' + \
-     balance[eur_idx][:reserved].to_f.round(2).to_s + ', available: ' + \
-     balance[eur_idx][:available].to_f.round(2).to_s + ')'
+puts 'EUR: ' + balance[eur_idx][:balance].to_f.round(2).to_s + \
+     ' (reserved: ' + balance[eur_idx][:reserved].to_f.round(2).to_s + \
+     ', available: ' + balance[eur_idx][:available].to_f.round(2).to_s + ')'
 puts 'BTC: ' + balance[btc_idx][:balance].to_f.to_s + ' (reserved: ' + \
      balance[btc_idx][:reserved].to_f.to_s + ', available: ' + \
      balance[btc_idx][:available].to_f.to_s + ')'
 # Orders information section
-buy_orders = Array.new
-sell_orders_prices = Array.new
+buy_orders = Array[]
+sell_orders_prices = Array[]
 puts '=' * 80
 puts 'My current orders:'
 p_orders = BitX.list_orders(ENV['TICKER'], state: 'PENDING')
@@ -87,7 +87,6 @@ def fold(buy_orders)
       puts 'Success' if BitX.stop_order(order)[:success] == true
     end
   end
-  return 0
 end
 
 # Check variables function
