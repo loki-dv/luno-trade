@@ -34,7 +34,7 @@ balance = BitX.balance
 # BTC
 eur_idx = 1
 btc_idx = 2
-puts 'Current balance:'
+puts 'Your current balance:'
 puts 'EUR: ' + balance[eur_idx][:balance].to_f.round(2).to_s + \
      ' (reserved: ' + balance[eur_idx][:reserved].to_f.round(2).to_s + \
      ', available: ' + balance[eur_idx][:available].to_f.round(2).to_s + ')'
